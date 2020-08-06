@@ -1,43 +1,56 @@
 import React from "react";
 
-import './styles.css';
+import "./styles.css";
 
 import whastappIcon from "../../assets/images/icons/whatsapp.svg";
+import api from "../../services/api";
 
-function TeacherItem() {
+export interface Teacher {
+  id: number;
+  avatar: string;
+  subject: string;
+  cost: number;
+  name: string;
+  whatsapp: string;
+  bio: string;
+}
+
+ interface TeachersItemProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeachersItemProps> = ({ teacher }) => {
+
+  function createNewConnection() {
+    api.post('/connections', {
+      user_id : teacher.id,
+    })
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img
-          src="https://avatars2.githubusercontent.com/u/21694466?s=460&u=625d8412b8e6f222e51a005dffbd67813fe0ffd1&v=4"
-          alt="Victor Melo"
-        />
+        <img src={teacher.avatar} alt={teacher.name} />
 
         <div>
-          <strong>Victor Costa</strong>
-          <span>Física</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
-      <p>
-        Engenheiro de Computação e Analista de Dados
-        <br /> <br />
-        Full Stack Developer em Comando Rodoviário da Brigada Militar
-        <br /> <br />
-        Apaixonado por tecnologia e eletrônica
-      </p>
+      <p>{teacher.bio}</p>
 
       <footer>
         <p>
           Preço/hora
-          <strong>R$ 75,00</strong>
+          <strong>R${teacher.cost}</strong>
         </p>
-        <button type="button">
+        <a onClick={createNewConnection} target="_blank" href={`https://wa.me/${teacher.whatsapp}`} >
           <img src={whastappIcon} alt="whatsapp" />
           Entrar em contato
-        </button>
+        </a>
       </footer>
     </article>
   );
-}
+};
 
 export default TeacherItem;
